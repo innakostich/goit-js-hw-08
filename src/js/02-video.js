@@ -3,36 +3,16 @@ import '../css/common.css';
 import Player from '@vimeo/player';
 import throttle from 'lodash.throttle';
 
-const TIME_KEY = 'videoplayer-current-time';
 const iframe = document.querySelector('iframe');
 const player = new Player(iframe);
 
+const STORAGE_TIME_KEY = 'videoplayer-current-time';
 
-const onPlay = function (data) {
-  const strigifyData = JSON.stringify(data);
-  localStorage.setItem(TIME_KEY, strigifyData);
-};
-player.on('timeupdate', throttle(onPlay, 1000));
+player.on('timeupdate', throttle(function(event) {
+  localStorage.setItem(STORAGE_TIME_KEY, event.seconds);
+}, 1000));
 
-
-  function resumePlayback() {
-  const { seconds } = JSON.parse(localStorage.getItem(TIME_KEY)) ['seconds'];
-  if (seconds) {
-    player.setCurrentTime(seconds)
-    .then(function () {})
-      .catch(function (error) {
-        switch (error.name) {
-          case 'Error':
-            break;
-            default:
-            break;
-        }
-      });
-  }
+const storedTime = localStorage.getItem(STORAGE_TIME_KEY);
+if (storedTime) {
+  player.setCurrentTime(storedTime);
 }
-resumePlayback();
-
-
-
-
-

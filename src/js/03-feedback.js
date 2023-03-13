@@ -7,7 +7,6 @@ const emailInput = form.querySelector('input[name="email"]');
 const messageInput = form.querySelector('textarea[name="message"]');
 const storageKey = 'feedback-form-state';
 
-
 const saveToStorage = throttle(() => {
   const feedback = {
     email: emailInput.value,
@@ -31,9 +30,17 @@ form.addEventListener('input', saveToStorage);
 form.addEventListener('submit', (event) => {
   event.preventDefault();
 
+  const email = emailInput.value;
+  const message = messageInput.value;
+
+  if (!email || !message) {
+    alert('Please fill in all fields');
+    return;
+  }
+
   const feedback = {
-    email: emailInput.value,
-    message: messageInput.value,
+    email,
+    message,
   };
   console.log(feedback);
 
@@ -41,5 +48,3 @@ form.addEventListener('submit', (event) => {
   emailInput.value = '';
   messageInput.value = '';
 });
-
-
